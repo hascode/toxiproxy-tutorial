@@ -10,7 +10,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <java.version>1.9</java.version>
+    <java.version>9</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
   </properties>
@@ -38,10 +38,11 @@
 
   <build>
     <plugins>
+      <!--
       <plugin>
         <groupId>org.moditect</groupId>
         <artifactId>moditect-maven-plugin</artifactId>
-        <version>1.0.0.Alpha2</version>
+        <version>1.0.0.Beta1</version>
         <executions>
           <execution>
             <id>add-module-infos</id>
@@ -52,20 +53,38 @@
             <configuration>
               <module>
                 <moduleInfo>
-                  <name>eu.rekawek.toxiproxy</name>
+                  <name>toxyproxy.sample</name>
                 </moduleInfo>
               </module>
             </configuration>
           </execution>
         </executions>
       </plugin>
+      -->
+      
+      <!-- for unit tests .. why? ;) -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.22.0</version>
+      </plugin>
+
+      <!-- for integration tests -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>2.22.0</version>
         <configuration>
-            <argLine>--add-modules jdk.incubator.httpclient</argLine>
+          <argLine>--illegal-access=deny</argLine>
         </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
