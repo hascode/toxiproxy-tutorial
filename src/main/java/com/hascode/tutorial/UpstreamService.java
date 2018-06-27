@@ -3,9 +3,11 @@ package com.hascode.tutorial;
 import java.net.URI;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Arrays;
 import jdk.incubator.http.HttpClient;
 import jdk.incubator.http.HttpClient.Version;
 import jdk.incubator.http.HttpRequest;
+import jdk.incubator.http.HttpRequest.BodyProcessor;
 import jdk.incubator.http.HttpResponse;
 
 public class UpstreamService {
@@ -24,5 +26,23 @@ public class UpstreamService {
         .thenAccept(System.out::println).join();
     long durationInSeconds = Duration.between(start, Instant.now()).getSeconds();
     System.out.printf("the request took %d seconds%n", durationInSeconds);
+  }
+
+  public void sendToRestEndpoint(String url, int sizeInBytes) {
+    byte[] body = new byte[sizeInBytes];
+
+    HttpRequest request = HttpRequest.newBuilder()
+        .uri(URI.create(url))
+        .header("Content-type", " application/octet-stream")
+        .POST(BodyProcessor.fromByteArray(body)).build();
+    Instant start = Instant.now();
+    HttpClient
+        .newBuilder()
+        .version(Version.HTTP_1_1)
+        .build()
+        .sendAsync(request, HttpResponse.BodyHandler.asString()).thenApply(HttpResponse::body)
+        .thenAccept(System.out::println).join();
+    long durationInSeconds = Duration.between(start, Instant.now()).getSeconds();
+    System.out.printf("uploading %d kb took %d seconds%n", (sizeInBytes/1024), durationInSeconds);
   }
 }
