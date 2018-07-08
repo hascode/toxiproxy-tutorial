@@ -38,6 +38,54 @@
 
   <build>
     <plugins>
+      <!-- start toxiproxy via docker and docker-maven-plugin -->
+      <plugin>
+        <groupId>io.fabric8</groupId>
+        <artifactId>docker-maven-plugin</artifactId>
+        <version>0.26.0</version>
+        <executions>
+          <execution>
+            <id>prepare-it-toxiproxy</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>start</goal>
+            </goals>
+            <configuration>
+              <images>
+                <image>
+                  <name>shopify/toxiproxy</name>
+                  <alias>it-toxiproxy</alias>
+                  <run>
+                    <network>
+                      <mode>host</mode>
+                    </network>
+                    <wait>
+                      <tcp>
+                        <host>localhost</host>
+                        <ports>
+                          <port>8474</port>
+                        </ports>
+                      </tcp>
+                      <kill>2000</kill>
+                    </wait>
+                  </run>
+                </image>
+              </images>
+            </configuration>
+          </execution>
+          <execution>
+            <id>remove-it-toxiproxy</id>
+            <phase>post-integration-test</phase>
+            <goals>
+              <goal>stop</goal>
+            </goals>
+            <configuration>
+              <removeVolumes>true</removeVolumes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      
       <!-- for unit tests .. why? ;) -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
