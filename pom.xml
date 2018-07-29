@@ -85,7 +85,7 @@
           </execution>
         </executions>
       </plugin>
-      
+
       <!-- for unit tests .. why? ;) -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

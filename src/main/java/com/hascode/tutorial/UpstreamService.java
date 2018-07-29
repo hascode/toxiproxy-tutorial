@@ -3,7 +3,6 @@ package com.hascode.tutorial;
 import java.net.URI;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Arrays;
 import jdk.incubator.http.HttpClient;
 import jdk.incubator.http.HttpClient.Version;
 import jdk.incubator.http.HttpRequest;
@@ -28,8 +27,8 @@ public class UpstreamService {
     System.out.printf("the request took %d seconds%n", durationInSeconds);
   }
 
-  public void sendToRestEndpoint(String url, int sizeInBytes) {
-    byte[] body = new byte[sizeInBytes];
+  public void sendToRestEndpoint(String url, int size) {
+    byte[] body = new byte[size];
 
     HttpRequest request = HttpRequest.newBuilder()
         .uri(URI.create(url))
@@ -43,6 +42,6 @@ public class UpstreamService {
         .sendAsync(request, HttpResponse.BodyHandler.asString()).thenApply(HttpResponse::body)
         .thenAccept(System.out::println).join();
     long durationInSeconds = Duration.between(start, Instant.now()).getSeconds();
-    System.out.printf("uploading %d kb took %d seconds%n", (sizeInBytes/1024), durationInSeconds);
+    System.out.printf("uploading %d kb took %d seconds%n", (size/1024), durationInSeconds);
   }
 }
